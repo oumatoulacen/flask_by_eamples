@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Look for suggestions</h1>
+    <form id="searchForm" action="/" method="GET" onsubmit="handleFormSubmit(event)">
+        <input type="text" id="publication" name="publication" placeholder="Search term">
+        <select id="channel" name="channel">
+            <option value="">Select a channel</option>
+            {% for channel in channels %}
+                <option value="{{ channel }}">{{ channel }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+
+    
+    <h1>Headlines for <b style="color: brown;">{{ publication }}</b> channel</h1>
+    {% for article in articles %}
+        <b><a href="{{article.link}}">{{article.title}}</a></b><br />
+        <i>{{article.published}}</i><br />
+        <p>{{article.summary}}</p>
+        <hr />
+    {% endfor %}
+
+    <script>
+        function handleFormSubmit(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+            
+            // Get the form elements
+            const form = document.getElementById('searchForm');
+            const publicationInput = document.getElementById('publication');
+            const channelSelect = document.getElementById('channel');
+            
+            // Determine which input is filled
+            let query;
+            if (publicationInput.value) {
+                query = `publication=${encodeURIComponent(publicationInput.value)}`;
+            } else if (channelSelect.value) {
+                query = `publication=${encodeURIComponent(channelSelect.value)}`;
+            }
+            
+            // Redirect to the form action with the query parameter
+            if (query) {
+                window.location.href = `${form.action}?${query}`;
+            }
+        }
+    </script>
+</body>
+</html>
